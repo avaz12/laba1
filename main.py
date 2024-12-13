@@ -1,5 +1,6 @@
 import sys
 import string
+from collections import Counter
 
 def read_text_from_file(filename):
     """Читает текст из указанного файла."""
@@ -20,6 +21,16 @@ def clean_and_split_text(text):
     words = text.split()
     return words
 
+def count_word_frequency(words):
+    """Подсчитывает частоту каждого слова."""
+    return Counter(words)
+
+def save_word_frequency_report(filename, word_counts):
+    """Сохраняет отчет о частоте слов в файл."""
+    with open(filename, 'w', encoding='utf-8') as file:
+        for word, count in word_counts.items():
+            file.write(f"{word}: {count}\n")
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Укажите имя файла для чтения текста.")
@@ -29,12 +40,11 @@ if __name__ == "__main__":
     text = read_text_from_file(filename)
     words = clean_and_split_text(text)
 
-    # Печатаем первые 20 слов для проверки
-    print("Обработанные слова:")
-    print(words[:20])
+    # Подсчитаем частоту появления слов
+    word_counts = count_word_frequency(words)
 
-    # Сохраняем обработанные слова в файл отчета
-    report_filename = f"result/{filename.split('.')[0]}_words.txt"
-    with open(report_filename, 'w', encoding='utf-8') as report_file:
-        for word in words:
-            report_file.write(f"{word}\n")
+    # Сохраняем отчет о частоте слов
+    report_filename = f"result/{filename.split('.')[0]}_word_frequency.txt"
+    save_word_frequency_report(report_filename, word_counts)
+
+    print(f"Отчёт о частоте слов сохранен в {report_filename}")
