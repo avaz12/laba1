@@ -25,12 +25,26 @@ def count_word_frequency(words):
     """Подсчитывает частоту каждого слова."""
     return Counter(words)
 
-def save_sorted_word_frequency_report(filename, word_counts):
-    """Сохраняет отсортированный отчет о частоте слов в файл."""
-    # Сортируем слова по убыванию частоты
-    sorted_word_counts = sorted(word_counts.items(), key=lambda item: item[1], reverse=True)
+def count_word_lengths(words):
+    """Подсчитывает количество слов по их длине."""
+    length_count = Counter(len(word) for word in words)
+    return length_count
+
+def count_punctuation(text):
+    """Подсчитывает количество знаков препинания в тексте."""
+    punctuation_count = sum(1 for char in text if char in string.punctuation)
+    return punctuation_count
+
+def save_statistics_report(filename, word_counts, word_lengths, punctuation_count, unique_word_count):
+    """Сохраняет статистику в файл."""
     with open(filename, 'w', encoding='utf-8') as file:
-        for word, count in sorted_word_counts:
+        file.write(f"Количество уникальных слов: {unique_word_count}\n")
+        file.write(f"Количество знаков препинания: {punctuation_count}\n")
+        file.write(f"Количество слов по длине:\n")
+        for length, count in sorted(word_lengths.items()):
+            file.write(f"{length}-букв: {count}\n")
+        file.write(f"\nЧастота слов:\n")
+        for word, count in word_counts.items():
             file.write(f"{word}: {count}\n")
 
 if __name__ == "__main__":
@@ -45,9 +59,13 @@ if __name__ == "__main__":
     # Подсчитаем частоту появления слов
     word_counts = count_word_frequency(words)
 
-    # Сохраняем отсортированный отчет о частоте слов
-    report_filename = f"result/{filename.split('.')[0]}_word_frequency_sorted.txt"
-    save_sorted_word_frequency_report(report_filename, word_counts)
+    # Подсчитаем статистику
+    word_lengths = count_word_lengths(words)
+    punctuation_count = count_punctuation(text)
+    unique_word_count = len(word_counts)
 
-    print(f"Отчёт о частоте слов (отсортированный) сохранен в {report_filename}")
+    # Сохраняем статистику в файл
+    stat_filename = f"result/{filename.split('.')[0]}_stat.txt"
+    save_statistics_report(stat_filename, word_counts, word_lengths, punctuation_count, unique_word_count)
 
+    print(f"Статистика сохранена в {stat_filename}")
