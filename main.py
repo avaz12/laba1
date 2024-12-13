@@ -25,10 +25,12 @@ def count_word_frequency(words):
     """Подсчитывает частоту каждого слова."""
     return Counter(words)
 
-def save_word_frequency_report(filename, word_counts):
-    """Сохраняет отчет о частоте слов в файл."""
+def save_sorted_word_frequency_report(filename, word_counts):
+    """Сохраняет отсортированный отчет о частоте слов в файл."""
+    # Сортируем слова по убыванию частоты
+    sorted_word_counts = sorted(word_counts.items(), key=lambda item: item[1], reverse=True)
     with open(filename, 'w', encoding='utf-8') as file:
-        for word, count in word_counts.items():
+        for word, count in sorted_word_counts:
             file.write(f"{word}: {count}\n")
 
 if __name__ == "__main__":
@@ -43,8 +45,9 @@ if __name__ == "__main__":
     # Подсчитаем частоту появления слов
     word_counts = count_word_frequency(words)
 
-    # Сохраняем отчет о частоте слов
-    report_filename = f"result/{filename.split('.')[0]}_word_frequency.txt"
-    save_word_frequency_report(report_filename, word_counts)
+    # Сохраняем отсортированный отчет о частоте слов
+    report_filename = f"result/{filename.split('.')[0]}_word_frequency_sorted.txt"
+    save_sorted_word_frequency_report(report_filename, word_counts)
 
-    print(f"Отчёт о частоте слов сохранен в {report_filename}")
+    print(f"Отчёт о частоте слов (отсортированный) сохранен в {report_filename}")
+
